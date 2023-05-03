@@ -6,6 +6,7 @@ import com.springbooot.blog.service.PostService;
 import com.springbooot.blog.utils.AppConstants;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -22,6 +23,7 @@ public class PostController {
     }
 
     // create blog post
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping()
     public ResponseEntity<PostDto> createPost(@Valid @RequestBody PostDto postDto){
 
@@ -47,12 +49,14 @@ public class PostController {
         return ResponseEntity.ok(postService.getPostById(id));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     // update post by id rest api
     @PutMapping("/{id}")
     public ResponseEntity<PostDto> updatePost(@Valid @RequestBody PostDto postDto,@PathVariable Long id){
         return new ResponseEntity<>(postService.updatePost(postDto, id), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     // delete post rest api
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletePost(@PathVariable Long id){
